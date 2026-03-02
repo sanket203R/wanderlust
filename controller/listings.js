@@ -44,32 +44,23 @@ module.exports.showListing = async (req,res)=>{
     res.render('./listing/show.ejs',{oneListing});
 };
 
-module.exports.createListing = async (req, res) => {
-    // 1. Extract file info (Multer puts this here)
-    if (!req.file) {
-        return res.status(400).send("No image file uploaded!");
-    }
+module.exports.createListing = async(req,res)=>{
     const url = req.file.path;
     const filename = req.file.filename;
-
+    // req.body.listing.image = {url,filename};
     const listingData = req.body.listing;
-
-    // 2. Fix category logic
+     // Check if category is undefined and set it to an empty array if so
     if (!listingData.category) {
         listingData.category = [];
-    } else if (!Array.isArray(listingData.category)) {
+    }else if (listingData.category && !Array.isArray(listingData.category)) {
         listingData.category = [listingData.category];
     }
-
-    // 3. Create the instance
     const newListing = new listing(listingData);
-    newListing.owner = req.user._id;
-
-    // 4. THE FIX: Assign the object directly to avoid "cannot read url of undefined"
-    newListing.image = { url, filename }; 
-
-    // 5. Save and Respond
-    await newListing.save(); 
+    newListing.image.url = url;
+    newListing.image.filename = filename;
+    console.log(newListing);
+    newListing.owner = req.user._id; // Set the owner field to the current user's ID
+    await newListing.save(); // Save the listing again to update the owner field
     req.flash('success', "New listing created!");
     res.redirect('/listings');
 };
