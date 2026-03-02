@@ -1,0 +1,45 @@
+<% performSearch = async (req, res) => {%>
+    <%const { search } = req.query;%>
+    <%const searchResults = await listing.find({ title: { $regex: search, $options: 'i' } });%>
+    <%res.render('./listing/index.ejs', { allListings: searchResults });%>
+<%}%>
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="/listings">Explore</a>
+      </div>
+      <% if (currPath === "/listings") { %>
+        <div class="d-flex ms-auto search-bar" role="search">
+          <form action="/listings" method="GET" class="d-flex">
+            <input 
+              type="text" 
+              name="search" 
+              id="searchInput" 
+              placeholder="Search by city or title..." 
+              class="form-control me-2 search-input"
+              value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+            >
+            <button class="btn btn-search d-flex align-items-center justify-content-center" type="submit">
+              <i class="fa-solid fa-magnifying-glass"></i> &nbsp;Search
+            </button>
+          </form>
+        </div>
+      <% } %>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/listings/new">Add new listings</a>
+        <% if(!currentUser) { %>
+        <a class="nav-link" href="/signup">signup</a>
+        <a class="nav-link" href="/login">login</a>
+        <% } else { %>
+        <a class="nav-link" href="/logout">logout</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,63 @@
+<% layout("layouts/boilerplate") %>
+<form method="POST" action="/listings/<%= oneListing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-8 offset-2">
+            <div class="mb-3">
+                <label for="title"class="form-label">Title:</label>
+                <input type="text" name="listing[title]" value="<%= oneListing.title %>" class="form-control" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please enter a title.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="description"class="form-label">Description:</label>
+                <textarea name="listing[description]" class="form-control" required><%= oneListing.description %></textarea>
+                <div class="invalid-feedback">Please enter a description.</div>
+            </div>
+            
+             <%- include("../includes/categories") %>
+
+             <% for(let category of oneListing.category) { %>
+                <script>
+                    document.getElementById("<%= category %>").checked = true;
+                </script>
+                <% } %>
+            <div class="mb-3">
+                Original Image: <br>
+                <img src="<%= originalUrl %>" alt="Original Image">
+            </div>
+
+            <div class="mb-3">
+                <label for="image"class="form-label">Upload New Image :</label>
+                <input type="file" name ="listing[image]" class="form-control">
+                <div class="invalid-feedback">Please enter a valid image URL.</div>
+            </div>
+
+            <div class="row">
+                <div class="mb-3 col-md-4">
+                    <label for="price"class="form-label">Price:</label>
+                    <input type="number" name="listing[price]" value="<%= oneListing.price %>" class="form-control" required>
+                    <div class="invalid-feedback">Price should be entered.</div>
+                </div>
+
+                <div class="mb-3 col-md-8">
+                    <label for="country"class="form-label">Country:</label>
+                    <input type="text" name="listing[country]" value="<%= oneListing.country %>" class="form-control" required>
+                    <div class="invalid-feedback">Country should be entered.</div>
+                </div>
+            </div>
+
+
+
+            <div class="mb-3">
+                <label for="location"class="form-label">Location:</label>
+                <input type="text" name="listing[location]" value="<%= oneListing.location %>" class="form-control" required>
+                <div class="invalid-feedback">Location should be entered.</div>
+            </div>
+
+            <button type="submit" class="btn btn-dark">edit</button>
+            <br>
+            <br>
+        </div>
+    </div>
+</form>
