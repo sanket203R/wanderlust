@@ -45,33 +45,22 @@ module.exports.showListing = async (req,res)=>{
 };
 
 module.exports.createListing = async(req,res)=>{
-    console.log("1. Request received at controller");
-    
     const url = req.file.path;
     const filename = req.file.filename;
-    console.log("2. File data extracted:", url, filename);
-
+    // req.body.listing.image = {url,filename};
     const listingData = req.body.listing;
-    console.log("3. Body data extracted:", listingData);
-
+     // Check if category is undefined and set it to an empty array if so
     if (!listingData.category) {
         listingData.category = [];
-    } else if (listingData.category && !Array.isArray(listingData.category)) {
+    }else if (listingData.category && !Array.isArray(listingData.category)) {
         listingData.category = [listingData.category];
     }
-
     const newListing = new listing(listingData);
-    
-    // FIXING THE ASSIGNMENT TO PREVENT CRASH
-    newListing.image = { url, filename }; 
-    newListing.owner = req.user._id;
-
-    console.log("4. Final Listing Object prepared:", newListing);
-
-    console.log("5. Attempting to save to MongoDB...");
-    await newListing.save(); 
-    console.log("6. Save successful!");
-
+    newListing.image.url = url;
+    newListing.image.filename = filename;
+    console.log(newListing);
+    newListing.owner = req.user._id; // Set the owner field to the current user's ID
+    await newListing.save(); // Save the listing again to update the owner field
     req.flash('success', "New listing created!");
     res.redirect('/listings');
 };
