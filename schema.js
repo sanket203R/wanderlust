@@ -1,5 +1,4 @@
 const joi = require('joi');
-const listing = require('./Models/listing');
 
 module.exports.listingSchema = joi.object({
     listing: joi.object({
@@ -8,12 +7,10 @@ module.exports.listingSchema = joi.object({
         price: joi.number().required().min(0),
         location: joi.string().required(),
         country: joi.string().required(),
-        image: joi.object({
-                url: joi.string().allow('', null) 
-            }),
-        category: joi.array().items(joi.string()),
+        // Change image to allow it to be empty/null during validation
+        image: joi.string().allow('', null), 
+        category: joi.any(), // Changed to any to handle both single strings and arrays
     }).required(),
-    
 });
 
 module.exports.reviewSchema = joi.object({
