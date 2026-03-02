@@ -19,12 +19,7 @@ const upload = multer({ dest: 'uploads/' });
 router
     .route('/')
         .get(wrapAsync(listingController.index))
-        .post(upload.single('listing[image]'), (req, res) => {
-    console.log("FILE RECEIVED:", req.file);
-    console.log("BODY RECEIVED:", req.body);
-    res.send("If you see this, Multer is working!");
-});
-        // .post(upload.single('listing[image]'),isLoggedIn,wrapAsync(listingController.createListing));
+        .post(isLoggedIn,validateListing,upload.single('listing[image]'),wrapAsync(listingController.createListing));
        
         // .post(upload.single('listing[image][url]'),(req,res)=>{
         //     console.log(req.file);
