@@ -56,9 +56,8 @@ module.exports.createListing = async(req,res)=>{
         listingData.category = [listingData.category];
     }
     const newListing = new listing(listingData);
-    newListing.image.url = url;
-    newListing.image.filename = filename;
     newListing.owner = req.user._id; // Set the owner field to the current user's ID
+    newListing.image = { url, filename };
     await newListing.save(); // Save the listing again to update the owner field
     req.flash('success', "New listing created!");
     res.redirect('/listings');
